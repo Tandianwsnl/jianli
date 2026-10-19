@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>谈典 · 机械工程 · 个人简历</title>
+<style>
+/* ============ 基础 ============ */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#04070f;
+  --ink:#e9f2ff;
+  --muted:#8ea6c6;
+  --cyan:#22d3ee;
+  --blue:#4b8cf7;
+  --violet:#8b5cf6;
+  --line:rgba(120,180,255,.18);
+  --card:rgba(11,21,40,.55);
+  --mono:"Consolas","Cascadia Mono","JetBrains Mono",ui-monospace,monospace;
+}
+body{
+  margin:0;color:var(--ink);
+  font-family:"Segoe UI","Microsoft YaHei","PingFang SC",system-ui,sans-serif;
+  background:
+    radial-gradient(1200px 820px at 72% -12%, #0e2549 0%, transparent 62%),
+    radial-gradient(900px 720px at 4% 18%, #10203f 0%, transparent 58%),
+    linear-gradient(180deg,#04070f 0%,#060c18 45%,#04070f 100%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+.mono{font-family:var(--mono);letter-spacing:.06em}
+
+/* ============ 背景层 ============ */
+#fx{position:fixed;inset:0;z-index:0;pointer-events:none}
+.fx-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.aurora{filter:blur(78px);opacity:.62;mix-blend-mode:screen}
+.aurora span{position:absolute;border-radius:50%;display:block}
+.aurora .a1{width:58vw;height:58vw;left:-14vw;top:-16vw;background:radial-gradient(circle,rgba(34,211,238,.42),transparent 66%);animation:drift1 24s ease-in-out infinite}
+.aurora .a2{width:52vw;height:52vw;right:-12vw;top:6vh;background:radial-gradient(circle,rgba(139,92,246,.40),transparent 66%);animation:drift2 30s ease-in-out infinite}
+.aurora .a3{width:46vw;height:46vw;left:26vw;bottom:-20vw;background:radial-gradient(circle,rgba(75,140,247,.36),transparent 66%);animation:drift3 27s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(6vw,7vh,0) scale(1.16)}}
+@keyframes drift2{0%,100%{transform:translate3d(0,0,0) scale(1.08)}50%{transform:translate3d(-7vw,5vh,0) scale(.94)}}
+@keyframes drift3{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(4vw,-6vh,0) scale(1.2)}}
+
+.grid-floor{
+  position:fixed;left:-40vw;right:-40vw;bottom:-12vh;height:80vh;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(34,211,238,.20) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(34,211,238,.13) 1px,transparent 1px);
+  background-size:64px 64px;
+  transform:perspective(440px) rotateX(72deg);
+  transform-origin:50% 100%;
+  animation:gridMove 5.5s linear infinite;
+  -webkit-mask-image:linear-gradient(to top,transparent 4%,#000 52%,transparent 100%);
+  mask-image:linear-gradient(to top,transparent 4%,#000 52%,transparent 100%);
+  opacity:.55;
+}
+@keyframes gridMove{from{background-position:0 0,0 0}to{background-position:0 64px,0 0}}
+.grid-horizon{
+  position:fixed;left:0;right:0;bottom:38vh;height:1px;z-index:0;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(34,211,238,.55),rgba(139,92,246,.45),transparent);
+  box-shadow:0 0 26px rgba(34,211,238,.45);
+}
+
+.streaks i{
+  position:absolute;height:1px;width:34vw;
+  background:linear-gradient(90deg,transparent,rgba(34,211,238,.9),transparent);
+  animation:streak 8s linear infinite;opacity:0;
+}
+.streaks i:nth-child(1){top:18vh;animation-delay:.4s}
+.streaks i:nth-child(2){top:44vh;width:46vw;background:linear-gradient(90deg,transparent,rgba(139,92,246,.85),transparent);animation-delay:3.1s}
+.streaks i:nth-child(3){top:72vh;width:28vw;animation-delay:5.6s}
+@keyframes streak{0%{transform:translateX(-46vw);opacity:0}12%{opacity:.95}88%{opacity:.95}100%{transform:translateX(124vw);opacity:0}}
+
+.scan{
+  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.55;
+  background:
+    repeating-linear-gradient(to bottom,rgba(255,255,255,.026) 0 1px,transparent 1px 4px),
+    radial-gradient(120% 90% at 50% 45%,transparent 42%,rgba(1,4,10,.72) 100%);
+}
+.spot{
+  position:fixed;z-index:1;width:640px;height:640px;left:0;top:0;pointer-events:none;border-radius:50%;
+  background:radial-gradient(circle,rgba(34,211,238,.14),rgba(139,92,246,.07) 42%,transparent 64%);
+  transform:translate3d(-50%,-50%,0);will-change:transform;
+}
+.progress{position:fixed;left:0;top:0;height:3px;width:0;z-index:40;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--violet));box-shadow:0 0 14px rgba(34,211,238,.7)}
+
+/* ============ 顶栏 ============ */
+.site-header{
+  position:fixed;top:0;left:0;right:0;height:58px;z-index:30;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 22px;
+  background:rgba(4,8,16,.62);border-bottom:1px solid var(--line);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.brand{display:flex;align-items:center;gap:10px;font-size:13px;color:#dceaff}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.72)}}
+.brand small{color:var(--muted);font-size:11px}
+.hd-actions{display:flex;align-items:center;gap:10px}
+.btn{
+  cursor:pointer;font-family:var(--mono);font-size:12px;color:#dff3ff;
+  padding:8px 14px;border-radius:9px;border:1px solid rgba(34,211,238,.42);
+  background:linear-gradient(180deg,rgba(34,211,238,.16),rgba(34,211,238,.05));
+  transition:.25s;
+}
+.btn:hover{background:linear-gradient(180deg,rgba(34,211,238,.34),rgba(34,211,238,.12));box-shadow:0 0 20px rgba(34,211,238,.35);transform:translateY(-1px)}
+.btn.ghost{border-color:var(--line);background:rgba(255,255,255,.03);color:var(--muted)}
+.btn.ghost:hover{color:#fff;border-color:rgba(34,211,238,.5)}
+
+/* -------- 作品集入口（顶栏） -------- */
+.portfolio-btn{
+  position:relative;display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+  border-color:rgba(139,92,246,.55);
+  background:linear-gradient(180deg,rgba(139,92,246,.28),rgba(34,211,238,.12));
+  color:#f0eaff;overflow:hidden;font-weight:600;
+}
+.portfolio-btn::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.42) 50%,transparent 70%);
+  transform:translateX(-130%);transition:transform .7s cubic-bezier(.4,0,.2,1);
+}
+.portfolio-btn:hover::after{transform:translateX(130%)}
+.portfolio-btn:hover{
+  background:linear-gradient(180deg,rgba(139,92,246,.48),rgba(34,211,238,.22));
+  border-color:rgba(34,211,238,.75);
+  box-shadow:0 0 26px rgba(139,92,246,.55),0 0 14px rgba(34,211,238,.35);
+  transform:translateY(-1px);
+}
+.pf-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--cyan);
+  box-shadow:0 0 10px var(--cyan);animation:pulse 1.8s ease-in-out infinite;
+}
+
+/* -------- 作品集入口（侧栏） -------- */
+.toc-portfolio{
+  display:flex;align-items:center;gap:12px;padding:14px 15px;text-decoration:none;
+  position:relative;overflow:hidden;transition:.28s cubic-bezier(.4,0,.2,1);
+  border-color:rgba(139,92,246,.38);
+  background:linear-gradient(135deg,rgba(139,92,246,.16),rgba(34,211,238,.07));
+}
+.toc-portfolio::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,var(--cyan),var(--violet));
+  box-shadow:0 0 12px rgba(34,211,238,.8);
+}
+.toc-portfolio:hover{
+  transform:translateY(-2px);border-color:rgba(34,211,238,.62);
+  box-shadow:0 12px 34px rgba(34,211,238,.20),0 0 0 1px rgba(139,92,246,.28);
+}
+.tp-ico{color:var(--cyan);font-size:13px;filter:drop-shadow(0 0 6px var(--cyan))}
+.tp-txt{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.tp-txt b{color:#f0f4ff;font-size:13.5px;letter-spacing:.06em}
+.tp-txt em{font-style:normal;font-size:9.5px;color:var(--muted);letter-spacing:.1em}
+.tp-arrow{color:var(--cyan);font-family:var(--mono);font-size:14px;transition:transform .28s}
+.toc-portfolio:hover .tp-arrow{transform:translateX(4px)}
+
+/* ============ 布局 ============ */
+.layout{
+  position:relative;z-index:10;
+  display:grid;grid-template-columns:300px minmax(0,1fr);gap:34px;
+  max-width:1280px;margin:0 auto;padding:96px 26px 40px;
+}
+
+/* ============ 侧栏 ============ */
+.sidebar{position:sticky;top:86px;align-self:start;display:flex;flex-direction:column;gap:16px}
+.glass{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 18px 50px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.idcard{padding:20px 18px;text-align:center;position:relative;overflow:hidden}
+.idcard::after{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.8}
+.mono-badge{
+  width:76px;height:76px;margin:4px auto 12px;border-radius:50%;display:grid;place-items:center;
+  font-family:var(--mono);font-weight:700;font-size:25px;color:#f2f9ff;position:relative;
+  background:linear-gradient(145deg,rgba(34,211,238,.20),rgba(139,92,246,.22));
+  border:1px solid rgba(130,205,255,.35);
+}
+.mono-badge::before{
+  content:"";position:absolute;inset:-7px;border-radius:50%;
+  background:conic-gradient(from 0deg,transparent 0 52%,rgba(34,211,238,.95) 72%,transparent 100%);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));
+  mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));
+  animation:spin 3.6s linear infinite;
+}
+@keyframes spin{to{transform:rotate(1turn)}}
+.idcard .name{margin:0 0 4px;font-size:23px;letter-spacing:.14em;font-weight:600}
+.idcard .role{font-size:12.5px;color:var(--cyan)}
+.meta{margin-top:14px;display:grid;gap:8px;text-align:left}
+.meta a,.meta span{
+  display:flex;justify-content:space-between;gap:10px;align-items:center;text-decoration:none;
+  font-size:12px;color:var(--muted);padding:7px 10px;border-radius:9px;background:rgba(255,255,255,.03);
+  border:1px solid rgba(120,180,255,.10);transition:.22s;
+}
+.meta a:hover,.meta span:hover{color:#eaf6ff;border-color:rgba(34,211,238,.45);background:rgba(34,211,238,.08);transform:translateX(3px)}
+
+.toc{padding:16px 14px;position:relative}
+.toc-title{font-size:10.5px;color:var(--muted);margin:0 6px 10px}
+.toc ul{list-style:none;margin:0;padding:0}
+.toc-ind{
+  position:absolute;left:0;width:3px;height:0;border-radius:3px;top:0;
+  background:linear-gradient(180deg,var(--cyan),var(--violet));box-shadow:0 0 12px rgba(34,211,238,.7);
+  transition:top .28s cubic-bezier(.4,0,.2,1),height .28s cubic-bezier(.4,0,.2,1);
+}
+#toc a{
+  display:flex;align-items:center;gap:10px;padding:9px 10px 9px 16px;border-radius:9px;
+  color:var(--muted);text-decoration:none;font-size:13.5px;transition:.22s;position:relative;
+}
+#toc a .n{font-size:10.5px;opacity:.85}
+#toc a:hover{color:#eaf6ff;background:rgba(120,180,255,.08)}
+#toc a.active{color:#fff;background:linear-gradient(90deg,rgba(34,211,238,.16),rgba(139,92,246,.08));box-shadow:inset 0 0 0 1px rgba(34,211,238,.28)}
+.percent{padding:12px 16px;font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+.percent b{color:var(--cyan)}
+
+/* ============ 内容卡片 ============ */
+.content{min-width:0;display:flex;flex-direction:column;gap:22px}
+.sheet{display:flex;flex-direction:column;gap:22px}
+.sheet-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  padding-bottom:8px;border-bottom:1px dashed rgba(120,180,255,.22);
+}
+.sheet-head b{color:var(--cyan);font-weight:600}
+
+.hero{padding:26px 26px 22px;position:relative;overflow:hidden;border-radius:18px}
+.hero::before{
+  content:"";position:absolute;inset:-2px;border-radius:20px;pointer-events:none;
+  background:linear-gradient(120deg,rgba(34,211,238,.34),transparent 38%,transparent 62%,rgba(139,92,246,.32));
+  -webkit-mask:linear-gradient(#000,#000) content-box,linear-gradient(#000,#000);
+  mask:linear-gradient(#000,#000) content-box,linear-gradient(#000,#000);
+  -webkit-mask-composite:xor;mask-composite:exclude;padding:1px;
+}
+.hero-tag{font-family:var(--mono);font-size:11px;color:var(--cyan);opacity:.9}
+.hero h1{
+  margin:12px 0 8px;font-size:clamp(38px,6vw,60px);letter-spacing:.16em;line-height:1.05;
+  background:linear-gradient(96deg,#ffffff,#a9e9ff 38%,#c9b7ff 72%,#ffffff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  background-size:220% auto;animation:shine 7s linear infinite;
+}
+@keyframes shine{to{background-position:220% center}}
+.typed{font-family:var(--mono);font-size:13.5px;color:#bcd6f5;min-height:22px}
+.caret{display:inline-block;width:8px;height:15px;background:var(--cyan);margin-left:3px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+.hero-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:20px}
+.hero-stats div{
+  padding:12px 14px;border-radius:12px;border:1px solid rgba(120,180,255,.14);
+  background:rgba(255,255,255,.032);transition:.25s;
+}
+.hero-stats div:hover{border-color:rgba(34,211,238,.5);background:rgba(34,211,238,.08);transform:translateY(-3px)}
+.hero-stats b{display:block;font-size:17px;color:#eaf6ff;font-family:var(--mono)}
+.hero-stats span{font-size:11.5px;color:var(--muted)}
+
+.sec{padding:24px 24px 22px;position:relative;border-radius:18px;scroll-margin-top:96px}
+.sec::before,.sec::after{
+  content:"";position:absolute;width:16px;height:16px;pointer-events:none;opacity:.85;
+  border-color:rgba(34,211,238,.75);transition:.3s;
+}
+.sec::before{left:8px;top:8px;border-left:2px solid;border-top:2px solid;border-radius:4px 0 0 0}
+.sec::after{right:8px;bottom:8px;border-right:2px solid;border-bottom:2px solid;border-radius:0 0 4px 0}
+.sec:hover::before,.sec:hover::after{width:26px;height:26px;border-color:var(--violet)}
+
+.sec-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.sec-head .idx{font-family:var(--mono);font-size:11px;color:var(--cyan);padding:3px 8px;border-radius:6px;border:1px solid rgba(34,211,238,.35);background:rgba(34,211,238,.08)}
+.sec-head h2{margin:0;font-size:21px;letter-spacing:.08em;white-space:nowrap}
+.sec-head .line{flex:1;height:1px;background:linear-gradient(90deg,rgba(34,211,238,.55),transparent)}
+.sec-head .en{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+
+table.info-table{width:100%;border-collapse:collapse;font-size:14px}
+table.info-table th,table.info-table td{padding:11px 14px;text-align:left;border-bottom:1px solid rgba(120,180,255,.13)}
+table.info-table thead th{font-size:12px;color:var(--cyan);font-family:var(--mono);letter-spacing:.1em;background:rgba(34,211,238,.06)}
+table.info-table tbody th{width:130px;color:var(--muted);font-weight:500;background:rgba(255,255,255,.02)}
+table.info-table tbody tr{transition:.22s}
+table.info-table tbody tr:hover{background:rgba(34,211,238,.07)}
+table.info-table a{color:#bfe9ff;text-decoration:none;border-bottom:1px dashed rgba(34,211,238,.5)}
+table.info-table a:hover{color:#fff;border-bottom-style:solid}
+
+.school{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 14px;margin-bottom:6px}
+.school .nm{font-size:17px;font-weight:600}
+.school .mj{color:#bfe9ff;font-size:14px}
+.badge{
+  font-family:var(--mono);font-size:11px;color:#dff3ff;padding:4px 10px;border-radius:999px;
+  border:1px solid rgba(34,211,238,.4);background:rgba(34,211,238,.10);
+}
+.sub-label{font-family:var(--mono);font-size:11px;color:var(--muted);margin:16px 0 9px;letter-spacing:.1em}
+.tags{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0}
+.tags li{
+  font-size:12.5px;color:#d6e8ff;padding:6px 12px;border-radius:999px;
+  border:1px solid rgba(120,180,255,.2);background:rgba(120,180,255,.07);transition:.22s;
+}
+.tags li:hover{color:#fff;border-color:rgba(34,211,238,.65);background:rgba(34,211,238,.14);transform:translateY(-2px) scale(1.03)}
+
+.proj-title{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:14px}
+.proj-title .nm{font-size:17px;font-weight:600}
+.proj-title .cat{font-size:11.5px;color:#e7d6ff;padding:4px 10px;border-radius:999px;border:1px solid rgba(139,92,246,.45);background:rgba(139,92,246,.14)}
+.desc{
+  font-size:14px;line-height:1.95;color:#cfdcf0;
+  padding:14px 16px;border-radius:12px;border-left:3px solid var(--cyan);
+  background:linear-gradient(90deg,rgba(34,211,238,.10),rgba(34,211,238,.02));
+}
+.duties{list-style:none;counter-reset:d;margin:14px 0 0;padding:0;display:grid;gap:10px}
+.duties li{
+  counter-increment:d;position:relative;padding:13px 16px 13px 52px;border-radius:12px;
+  font-size:14px;line-height:1.85;color:#cfdcf0;
+  border:1px solid rgba(120,180,255,.14);background:rgba(255,255,255,.028);transition:.26s;
+}
+.duties li::before{
+  content:"0" counter(d);position:absolute;left:14px;top:13px;
+  font-family:var(--mono);font-size:12px;color:var(--cyan);
+  width:24px;height:24px;border-radius:7px;display:grid;place-items:center;
+  border:1px solid rgba(34,211,238,.42);background:rgba(34,211,238,.09);
+}
+.duties li:hover{border-color:rgba(34,211,238,.55);background:rgba(34,211,238,.08);transform:translateX(4px)}
+
+.timeline{position:relative;padding-left:22px;display:grid;gap:18px}
+.timeline::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:1px;background:linear-gradient(180deg,var(--cyan),rgba(139,92,246,.5),transparent)}
+.tl-item{position:relative}
+.tl-item::before{
+  content:"";position:absolute;left:-19px;top:6px;width:9px;height:9px;border-radius:50%;
+  background:var(--cyan);box-shadow:0 0 0 4px rgba(34,211,238,.15),0 0 14px var(--cyan);
+}
+.tl-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:9px}
+.tl-head .nm{font-size:16px;font-weight:600}
+.tl-list{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.tl-list li{position:relative;padding-left:16px;font-size:14px;line-height:1.85;color:#cfdcf0}
+.tl-list li::before{content:"▹";position:absolute;left:0;color:var(--cyan);font-size:12px}
+
+.bars{display:grid;gap:15px}
+.bar-row .top{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:7px}
+.bar-row .top em{font-style:normal;color:var(--muted);font-size:12px;font-family:var(--mono)}
+.track{height:8px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;border:1px solid rgba(120,180,255,.12)}
+.fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--violet));box-shadow:0 0 16px rgba(34,211,238,.55);transition:width 1.4s cubic-bezier(.22,1,.36,1)}
+
+.para{font-size:14.5px;line-height:2.05;color:#cfdcf0;margin:0}
+.para + .para{margin-top:12px}
+.awards{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.awards li{
+  position:relative;padding:13px 16px 13px 44px;border-radius:12px;font-size:14px;color:#e6f1ff;
+  border:1px solid rgba(139,92,246,.28);background:linear-gradient(90deg,rgba(139,92,246,.16),rgba(139,92,246,.03));transition:.26s;
+}
+.awards li::before{content:"★";position:absolute;left:16px;top:12px;color:#d7c2ff;font-size:14px}
+.awards li:hover{border-color:rgba(139,92,246,.7);transform:translateX(4px)}
+
+.foot-note{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center;padding:6px 0 24px}
+
+.page-break{display:flex;align-items:center;gap:14px;padding:6px 4px}
+.page-break .ln{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(120,180,255,.4),transparent)}
+.page-break .lb{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.18em}
+
+.site-footer{position:relative;z-index:10;text-align:center;padding:8px 20px 34px;font-size:11.5px;color:var(--muted)}
+.site-footer .mono{font-size:11px}
+
+.totop{
+  position:fixed;right:22px;bottom:24px;z-index:35;width:44px;height:44px;border-radius:50%;
+  display:grid;place-items:center;cursor:pointer;font-size:16px;color:#eaf6ff;
+  border:1px solid rgba(34,211,238,.45);background:rgba(8,16,30,.75);
+  backdrop-filter:blur(8px);opacity:0;pointer-events:none;transform:translateY(12px);transition:.3s;
+}
+.totop.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+.totop:hover{background:rgba(34,211,238,.22);box-shadow:0 0 22px rgba(34,211,238,.45)}
+
+/* ============ 动效 ============ */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .75s ease,transform .75s cubic-bezier(.22,1,.36,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ============ 响应式 ============ */
+@media (max-width:1024px){
+  .layout{grid-template-columns:1fr;gap:20px;padding:88px 18px 30px}
+  .sidebar{position:static}
+  .toc ul{display:flex;flex-wrap:wrap;gap:6px}
+  .toc-ind{display:none}
+  #toc a{padding:8px 12px}
+}
+@media (max-width:620px){
+  .site-header{padding:0 12px;height:54px}
+  .brand small{display:none}
+  .btn{padding:7px 10px;font-size:11px}
+  .sec{padding:18px 15px}
+  .hero{padding:20px 16px}
+  .sec-head .en{display:none}
+  .spot{display:none}
+}
+
+/* ============ 打印 ============ */
+@media print{
+  html,body{background:#fff !important;color:#111 !important}
+  #fx,.aurora,.grid-floor,.grid-horizon,.streaks,.scan,.spot,.progress,.site-header,.totop,.page-break,.toc{display:none !important}
+  .layout{display:block;max-width:none;padding:0}
+  .sidebar .idcard{margin-bottom:14px}
+  .glass,.sec,.hero{
+    background:#fff !important;border:1px solid #d5dce6 !important;box-shadow:none !important;
+    backdrop-filter:none !important;break-inside:avoid;
+  }
+  .hero h1{color:#0b2036 !important;-webkit-text-fill-color:#0b2036 !important;animation:none;background:none}
+  .sec-head h2,.school .nm,.proj-title .nm,.tl-head .nm{color:#0b2036 !important}
+  .desc,.duties li,.tl-list li,.para,.awards li{color:#1a2433 !important;background:#f6f9fc !important;border-color:#dde5ee !important}
+  .tags li{color:#17324f !important;border-color:#c9d8e8 !important;background:#f2f7fc !important}
+  .fill{box-shadow:none !important}
+  #page2{break-before:page;page-break-before:always}
+  a{color:#0b2036 !important;text-decoration:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="fx-layer aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+<div class="grid-floor" aria-hidden="true"></div>
+<div class="grid-horizon" aria-hidden="true"></div>
+<div class="fx-layer streaks" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="fx-layer scan" aria-hidden="true"></div>
+<div class="spot" id="spot" aria-hidden="true"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<header class="site-header header">
+  <div class="brand mono"><span class="dot"></span>TAN DIAN <small>// MECHANICAL ENGINEERING RESUME</small></div>
+  <div class="hd-actions">
+    <a class="btn portfolio-btn" href="portfolio/">
+      <span class="pf-dot"></span>作品集 PORTFOLIO
+    </a>
+    <button class="btn" id="printBtn">导出 PDF / 打印</button>
+    <button class="btn ghost" id="topBtn2">回到顶部</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="glass idcard">
+      <div class="mono-badge">TD</div>
+      <div class="name">谈 典</div>
+      <div class="role mono">机械工程 · 求职意向</div>
+      <div class="meta">
+        <span><em style="font-style:normal;color:#9fb6d4">毕 业 院 校</em>武昌首义学院</span>
+        <span><em style="font-style:normal;color:#9fb6d4">出 生 年 月</em>2005 年 10 月</span>
+        <a href="tel:13995835820"><em style="font-style:normal;color:#9fb6d4">联 系 电 话</em>13995835820</a>
+        <a href="mailto:a965942058@126.com"><em style="font-style:normal;color:#9fb6d4">电 子 邮 箱</em>a965942058@126.com</a>
+      </div>
+    </div>
+
+    <nav class="glass toc" id="toc" aria-label="目录导航">
+      <div class="toc-title mono">CONTENTS / 目录</div>
+      <span class="toc-ind" id="tocInd" aria-hidden="true"></span>
+      <ul>
+        <li><a href="#s1"><span class="n mono">01</span>基本信息</a></li>
+        <li><a href="#s2"><span class="n mono">02</span>教育背景</a></li>
+        <li><a href="#s3"><span class="n mono">03</span>项目经历</a></li>
+        <li><a href="#s4"><span class="n mono">04</span>实习经历</a></li>
+        <li><a href="#s5"><span class="n mono">05</span>专业技能</a></li>
+        <li><a href="#s6"><span class="n mono">06</span>自我评价</a></li>
+      </ul>
+    </nav>
+
+    <a class="glass toc-portfolio" href="portfolio/">
+      <span class="tp-ico">◆</span>
+      <span class="tp-txt"><b>作品集</b><em class="mono">VISUAL PORTFOLIO · 9 WORKS</em></span>
+      <span class="tp-arrow">→</span>
+    </a>
+
+    <div class="glass percent mono"><span>READING</span><span><b id="pct">0</b>%</span></div>
+  </aside>
+
+  <main class="content">
+
+    <!-- ================= PAGE 01 ================= -->
+    <section class="sheet" id="page1">
+      <div class="sheet-head"><span>RESUME / 01</span><b>PROFILE &amp; EXPERIENCE</b><span>第一页</span></div>
+
+      <div class="glass hero reveal">
+        <div class="hero-tag">// MECHANICAL ELECTRONIC ENGINEERING · UNDERGRADUATE</div>
+        <h1>谈 典</h1>
+        <div class="typed"><span id="typed"></span><span class="caret"></span></div>
+        <div class="hero-stats">
+          <div><b>2023.09</b><span>入学 · 本科在读至今</span></div>
+          <div><b>1 项</b><span>工创大赛项目</span></div>
+          <div><b>2 段</b><span>实习经历</span></div>
+          <div><b>4 年</b><span>班级班长任职</span></div>
+        </div>
+      </div>
+
+      <section class="glass sec reveal" id="s1">
+        <div class="sec-head"><span class="idx">01</span><h2>基本信息</h2><span class="line"></span><span class="en">PROFILE</span></div>
+        <table class="info-table">
+          <thead><tr><th>项目</th><th>内容</th></tr></thead>
+          <tbody>
+            <tr><th>姓名</th><td>谈典</td></tr>
+            <tr><th>求职意向</th><td>机械工程</td></tr>
+            <tr><th>出生年月</th><td>2005 年 10 月</td></tr>
+            <tr><th>学历</th><td>本科</td></tr>
+            <tr><th>毕业院校</th><td>武昌首义学院</td></tr>
+            <tr><th>籍贯</th><td>湖北鄂州</td></tr>
+            <tr><th>联系电话</th><td><a href="tel:13995835820">13995835820</a></td></tr>
+            <tr><th>电子邮箱</th><td><a href="mailto:a965942058@126.com">a965942058@126.com</a></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="glass sec reveal" id="s2">
+        <div class="sec-head"><span class="idx">02</span><h2>教育背景</h2><span class="line"></span><span class="en">EDUCATION</span></div>
+        <div class="school">
+          <span class="nm">武昌首义学院</span>
+          <span class="mj">机械电子工程 · 本科</span>
+          <span class="badge">2023.09 至今</span>
+        </div>
+        <div class="sub-label">主修课程</div>
+        <ul class="tags">
+          <li>机械制图</li><li>SolidWorks</li><li>理论力学</li><li>材料力学</li>
+          <li>机械原理</li><li>机械设计</li><li>数控技术</li><li>CAD</li>
+          <li>计算机辅助设计</li><li>工业机器人基础与编程</li><li>可编程控制器原理及应用</li>
+        </ul>
+      </section>
+
+      <section class="glass sec reveal" id="s3">
+        <div class="sec-head"><span class="idx">03</span><h2>项目经历</h2><span class="line"></span><span class="en">PROJECT</span></div>
+        <div class="proj-title">
+          <span class="nm">温差电动车设计</span>
+          <span class="cat">工创大赛项目</span>
+        </div>
+        <div class="sub-label">项目描述</div>
+        <p class="desc">参与工创大赛，设计一款基于温差发电的节能电动车，利用冷热端温差实现热能转换电能，替代传统电池供电，完成整车方案设计、硬件搭建与性能调试。</p>
+        <div class="sub-label">项目职责</div>
+        <ol class="duties">
+          <li>负责温差电动车整体方案设计，主导温差发电模块选型，完成集热与散热结构优化；</li>
+          <li>开展整车轻量化结构设计以及硬件装配工作，搭建稳压驱动电路及整车控制系统；</li>
+          <li>通过仿真测试与实物调试优化发电参数，解决发电效率低、动力输出不稳定等问题，保障整车稳定运行。</li>
+        </ol>
+      </section>
+
+      <section class="glass sec reveal" id="s4">
+        <div class="sec-head"><span class="idx">04</span><h2>实习经历</h2><span class="line"></span><span class="en">INTERNSHIP</span></div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-head"><span class="nm">金工实习</span><span class="badge">2024.11 - 2024.12</span></div>
+            <ul class="tl-list">
+              <li>掌握车、铣、磨、钳、数控加工等基础机械加工工艺；</li>
+              <li>熟悉机械零件完整加工流程，了解车间生产安全操作规范。</li>
+            </ul>
+          </div>
+          <div class="tl-item">
+            <div class="tl-head"><span class="nm">企业参观实习</span><span class="badge">2026.04</span></div>
+            <ul class="tl-list">
+              <li>参观多家装备制造企业，了解企业主力产品完整生产工艺流程；</li>
+              <li>实地走访冲压、焊接、装配等核心生产车间，熟悉数控机床、自动化流水线设备运行逻辑。</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="glass sec reveal" id="s5">
+        <div class="sec-head"><span class="idx">05</span><h2>专业技能</h2><span class="line"></span><span class="en">SKILLS</span></div>
+        <div class="sub-label">专业领域</div>
+        <div class="bars">
+          <div class="bar-row">
+            <div class="top"><span>绘图建模</span><em>AutoCAD / SolidWorks</em></div>
+            <div class="track"><div class="fill" data-v="92"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="top"><span>办公能力</span><em>Office / Excel</em></div>
+            <div class="track"><div class="fill" data-v="85"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="top"><span>工艺认知</span><em>金工 / 冲压 / 焊接 / 装配</em></div>
+            <div class="track"><div class="fill" data-v="80"></div></div>
+          </div>
+        </div>
+        <ul class="tags" style="margin-top:12px">
+          <li>熟练使用 AutoCAD、SolidWorks 进行机械建模与工程图绘制</li>
+          <li>熟练运用 Office、Excel 办公软件，具备较好文档处理、沟通协调能力</li>
+          <li>掌握金工基础加工工艺，了解冲压、焊接、装配、自动化产线相关知识</li>
+        </ul>
+
+        <div class="sub-label">非专业领域技能</div>
+        <ul class="tl-list">
+          <li>熟悉并且熟练使用 ComfyUI、Stable Diffusion、Flux、Qwen-Image、Wan、Stable Video Diffusion 等模型或生态，能部署本地 ComfyUI 工作流并且搭配模型；</li>
+          <li>有开源模型复现、Lora 训练等经验；</li>
+          <li>理解图像生成、图像编辑、视频生成；</li>
+          <li>有问题拆解能力和沟通能力，能和产品、运营、创意、设计、开发等角色协作推进落地；</li>
+          <li>懂计算机，会基本计算机网络以及硬件问题排查以及维修；</li>
+          <li>有 AIGC 设计作品集。</li>
+        </ul>
+      </section>
+    </section>
+
+    <!-- ================= 分页 ================= -->
+    <div class="page-break" aria-hidden="true">
+      <span class="ln"></span><span class="lb">PAGE 02 · PAGE BREAK</span><span class="ln"></span>
+    </div>
+
+    <!-- ================= PAGE 02 ================= -->
+    <section class="sheet" id="page2">
+      <div class="sheet-head"><span>RESUME / 02</span><b>EVALUATION &amp; AWARDS</b><span>第二页</span></div>
+
+      <section class="glass sec reveal" id="s6">
+        <div class="sec-head"><span class="idx">06</span><h2>自我评价</h2><span class="line"></span><span class="en">SELF-EVALUATION</span></div>
+        <p class="para">拥有四年班级班长任职经历，具备较强团队协作、统筹规划与落地执行能力，多次获评优秀学生干部。</p>
+        <p class="para">学习主动性强，曾获得学习进步奖，能够兼顾学生工作与专业学习。工作踏实认真，抗压能力良好，注重工作结果，愿意在实践中持续提升个人专业能力。</p>
+
+        <div class="sub-label">其他奖项（与工作能力无关）</div>
+        <ul class="awards">
+          <li>2025 年永劫无间春季高校赛湖北省赛区 3 排亚军</li>
+          <li>2025 年永劫无间秋季高校赛湖北省赛区 3 排冠军</li>
+        </ul>
+      </section>
+    </section>
+
+    <div class="foot-note mono">— END OF RESUME —</div>
+  </main>
+</div>
+
+<footer class="site-footer footer mono">谈典 · 机械工程 · 个人简历 | 联系电话 13995835820 | a965942058@126.com</footer>
+<button class="totop" id="topBtn" title="回到顶部">↑</button>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- 1. 粒子星座背景 ---------- */
+  var cv = document.getElementById("fx");
+  if (cv && cv.getContext) {
+    var ctx = cv.getContext("2d");
+    var W = 0, H = 0, DPR = 1, parts = [];
+    var mouse = { x: -9999, y: -9999 };
+
+    function build() {
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth; H = window.innerHeight;
+      cv.width = Math.floor(W * DPR); cv.height = Math.floor(H * DPR);
+      cv.style.width = W + "px"; cv.style.height = H + "px";
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      var n = Math.max(46, Math.min(140, Math.round(W * H / 15000)));
+      parts = [];
+      for (var i = 0; i < n; i++) {
+        parts.push({
+          x: Math.random() * W, y: Math.random() * H,
+          vx: (Math.random() - .5) * .42, vy: (Math.random() - .5) * .42,
+          r: Math.random() * 1.5 + .7,
+          hue: Math.random() < .72 ? "140,215,255" : "176,150,255"
+        });
+      }
+    }
+
+    var LINK = 132, MLINK = 178;
+    function frame() {
+      ctx.clearRect(0, 0, W, H);
+      var i, j, p, q, dx, dy, d;
+      for (i = 0; i < parts.length; i++) {
+        p = parts[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < -20) p.x = W + 20; else if (p.x > W + 20) p.x = -20;
+        if (p.y < -20) p.y = H + 20; else if (p.y > H + 20) p.y = -20;
+      }
+      ctx.lineWidth = 1;
+      for (i = 0; i < parts.length; i++) {
+        p = parts[i];
+        for (j = i + 1; j < parts.length; j++) {
+          q = parts[j];
+          dx = p.x - q.x; dy = p.y - q.y;
+          d = dx * dx + dy * dy;
+          if (d < LINK * LINK) {
+            var a = (1 - Math.sqrt(d) / LINK) * .34;
+            ctx.strokeStyle = "rgba(120,200,255," + a.toFixed(3) + ")";
+            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke();
+          }
+        }
+      }
+      for (i = 0; i < parts.length; i++) {
+        p = parts[i];
+        dx = p.x - mouse.x; dy = p.y - mouse.y;
+        d = Math.sqrt(dx * dx + dy * dy);
+        if (d < MLINK) {
+          ctx.strokeStyle = "rgba(34,211,238," + ((1 - d / MLINK) * .5).toFixed(3) + ")";
+          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+          p.x -= dx / d * .42; p.y -= dy / d * .42;
+        }
+        ctx.fillStyle = "rgba(" + p.hue + ",.9)";
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "rgba(" + p.hue + ",.12)";
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 4.2, 0, Math.PI * 2); ctx.fill();
+      }
+      raf = window.requestAnimationFrame(frame);
+    }
+
+    var raf = null;
+    build();
+    if (reduce) { frame(); window.cancelAnimationFrame(raf); raf = null; }
+    else { frame(); }
+
+    var rt;
+    window.addEventListener("resize", function () {
+      clearTimeout(rt);
+      rt = setTimeout(function () {
+        if (raf) window.cancelAnimationFrame(raf);
+        build(); frame();
+      }, 180);
+    });
+
+    window.addEventListener("pointermove", function (e) {
+      mouse.x = e.clientX; mouse.y = e.clientY;
+    }, { passive: true });
+    window.addEventListener("pointerleave", function () { mouse.x = mouse.y = -9999; });
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) { if (raf) { window.cancelAnimationFrame(raf); raf = null; } }
+      else if (!reduce && !raf) { frame(); }
+    });
+  }
+
+  /* ---------- 2. 鼠标光斑 ---------- */
+  var spot = document.getElementById("spot");
+  if (spot && !reduce && window.innerWidth > 620) {
+    var sx = window.innerWidth / 2, sy = window.innerHeight / 3, tx = sx, ty = sy;
+    window.addEventListener("pointermove", function (e) { tx = e.clientX; ty = e.clientY; }, { passive: true });
+    (function loop() {
+      sx += (tx - sx) * .12; sy += (ty - sy) * .12;
+      spot.style.transform = "translate3d(" + (sx - 320) + "px," + (sy - 320) + "px,0)";
+      window.requestAnimationFrame(loop);
+    })();
+  }
+
+  /* ---------- 3. 滚动进度 + 目录高亮 ---------- */
+  var progress = document.getElementById("progress");
+  var pct = document.getElementById("pct");
+  var tocInd = document.getElementById("tocInd");
+  var links = [].slice.call(document.querySelectorAll("#toc a"));
+  var secs = [].slice.call(document.querySelectorAll(".sec"));
+  var totop = document.getElementById("topBtn");
+
+  function onScroll() {
+    var y = window.pageYOffset || document.documentElement.scrollTop;
+    var max = (document.documentElement.scrollHeight - window.innerHeight) || 1;
+    var p = Math.max(0, Math.min(100, Math.round(y / max * 100)));
+    if (progress) progress.style.width = p + "%";
+    if (pct) pct.textContent = p;
+    if (totop) totop.classList.toggle("show", y > 420);
+
+    var active = null, best = Infinity;
+    for (var k = 0; k < secs.length; k++) {
+      var rect = secs[k].getBoundingClientRect();
+      var dist = Math.abs(rect.top - 120);
+      if (rect.bottom > 120 && dist < best) { best = dist; active = secs[k].id; }
+    }
+    for (var m = 0; m < links.length; m++) {
+      var on = links[m].getAttribute("href") === "#" + active;
+      links[m].classList.toggle("active", on);
+      if (on && tocInd && tocInd.parentNode) {
+        tocInd.style.top = links[m].offsetTop + "px";
+        tocInd.style.height = links[m].offsetHeight + "px";
+      }
+    }
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  onScroll();
+
+  /* ---------- 4. 滚动渐显 + 技能条 ---------- */
+  var reveals = [].slice.call(document.querySelectorAll(".reveal"));
+  function show(el) {
+    el.classList.add("in");
+    var fills = el.querySelectorAll(".fill");
+    for (var i = 0; i < fills.length; i++) {
+      (function (f) { setTimeout(function () { f.style.width = f.getAttribute("data-v") + "%"; }, 120 + i * 130); })(fills[i]);
+    }
+  }
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { show(en.target); io.unobserve(en.target); }
+      });
+    }, { threshold: .12, rootMargin: "0px 0px -8% 0px" });
+    reveals.forEach(function (el) { io.observe(el); });
+  } else {
+    reveals.forEach(show);
+    var fillsAll = document.querySelectorAll(".fill");
+    for (var fi = 0; fi < fillsAll.length; fi++) fillsAll[fi].style.width = fillsAll[fi].getAttribute("data-v") + "%";
+  }
+
+  /* ---------- 5. 打字机 ---------- */
+  var typedEl = document.getElementById("typed");
+  if (typedEl) {
+    var lines = [
+      "机械电子工程 · 本科在读（2023.09 至今）",
+      "项目：温差电动车设计 · 工创大赛",
+      "技能：AutoCAD · SolidWorks · Office"
+    ];
+    if (reduce) { typedEl.textContent = lines[0]; }
+    else {
+      var li = 0, ci = 0, del = false;
+      (function type() {
+        var s = lines[li];
+        typedEl.textContent = s.slice(0, ci);
+        if (!del && ci < s.length) { ci++; setTimeout(type, 55); }
+        else if (!del && ci === s.length) { del = true; setTimeout(type, 1500); }
+        else if (del && ci > 0) { ci--; setTimeout(type, 24); }
+        else { del = false; li = (li + 1) % lines.length; setTimeout(type, 260); }
+      })();
+    }
+  }
+
+  /* ---------- 6. 回到顶部 / 打印 ---------- */
+  function toTop() { window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }); }
+  if (totop) totop.addEventListener("click", toTop);
+  var tb2 = document.getElementById("topBtn2");
+  if (tb2) tb2.addEventListener("click", toTop);
+  var pb = document.getElementById("printBtn");
+  if (pb) pb.addEventListener("click", function () { window.print(); });
+})();
+</script>
+</body>
+</html>

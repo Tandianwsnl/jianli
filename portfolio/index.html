@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>作品集 · 谈典 TAN DIAN</title>
+<meta name="description" content="谈典的视觉与工程作品集 — 东方神兽潮玩 IP 设计、PLC 自动化工程项目。">
+<style>
+/* ============ 基础（沿用简历站配色） ============ */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#04070f;
+  --ink:#e9f2ff;
+  --muted:#8ea6c6;
+  --cyan:#22d3ee;
+  --blue:#4b8cf7;
+  --violet:#8b5cf6;
+  --line:rgba(120,180,255,.18);
+  --card:rgba(11,21,40,.55);
+  --mono:"Consolas","Cascadia Mono","JetBrains Mono",ui-monospace,monospace;
+}
+body{
+  margin:0;color:var(--ink);
+  font-family:"Segoe UI","Microsoft YaHei","PingFang SC",system-ui,sans-serif;
+  background:
+    radial-gradient(1200px 820px at 72% -12%, #0e2549 0%, transparent 62%),
+    radial-gradient(900px 720px at 4% 18%, #10203f 0%, transparent 58%),
+    linear-gradient(180deg,#04070f 0%,#060c18 45%,#04070f 100%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+.mono{font-family:var(--mono);letter-spacing:.06em}
+img{display:block;max-width:100%}
+::selection{background:rgba(34,211,238,.3);color:#fff}
+
+/* ============ 背景层（与简历站一致） ============ */
+.fx-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.aurora{filter:blur(78px);opacity:.62;mix-blend-mode:screen}
+.aurora span{position:absolute;border-radius:50%;display:block}
+.aurora .a1{width:58vw;height:58vw;left:-14vw;top:-16vw;background:radial-gradient(circle,rgba(34,211,238,.42),transparent 66%);animation:drift1 24s ease-in-out infinite}
+.aurora .a2{width:52vw;height:52vw;right:-12vw;top:6vh;background:radial-gradient(circle,rgba(139,92,246,.40),transparent 66%);animation:drift2 30s ease-in-out infinite}
+.aurora .a3{width:46vw;height:46vw;left:26vw;bottom:-20vw;background:radial-gradient(circle,rgba(75,140,247,.36),transparent 66%);animation:drift3 27s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(6vw,7vh,0) scale(1.16)}}
+@keyframes drift2{0%,100%{transform:translate3d(0,0,0) scale(1.08)}50%{transform:translate3d(-7vw,5vh,0) scale(.94)}}
+@keyframes drift3{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(4vw,-6vh,0) scale(1.2)}}
+.grid-floor{
+  position:fixed;left:-40vw;right:-40vw;bottom:-12vh;height:80vh;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(34,211,238,.20) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(34,211,238,.13) 1px,transparent 1px);
+  background-size:64px 64px;
+  transform:perspective(440px) rotateX(72deg);transform-origin:50% 100%;
+  animation:gridMove 5.5s linear infinite;opacity:.5;
+  -webkit-mask-image:linear-gradient(to top,transparent 4%,#000 52%,transparent 100%);
+  mask-image:linear-gradient(to top,transparent 4%,#000 52%,transparent 100%);
+}
+@keyframes gridMove{from{background-position:0 0,0 0}to{background-position:0 64px,0 0}}
+.scan{
+  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(to bottom,rgba(255,255,255,.026) 0 1px,transparent 1px 4px);
+}
+.progress{position:fixed;top:0;left:0;height:2px;z-index:60;background:linear-gradient(90deg,var(--cyan),var(--violet));box-shadow:0 0 14px rgba(34,211,238,.8);width:0}
+
+/* ============ 顶栏 ============ */
+.site-header{
+  position:fixed;top:0;left:0;right:0;z-index:50;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 22px;background:rgba(4,7,15,.72);
+  border-bottom:1px solid rgba(120,180,255,.12);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.brand{display:flex;align-items:center;gap:10px;font-size:13px;color:#dceaff}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.72)}}
+.brand small{color:var(--muted);font-size:11px}
+.hd-actions{display:flex;align-items:center;gap:10px}
+.btn{
+  cursor:pointer;font-family:var(--mono);font-size:12px;color:#dff3ff;text-decoration:none;
+  padding:8px 14px;border-radius:9px;border:1px solid rgba(34,211,238,.42);
+  background:linear-gradient(180deg,rgba(34,211,238,.16),rgba(34,211,238,.05));
+  transition:.25s;display:inline-flex;align-items:center;gap:7px;
+}
+.btn:hover{background:linear-gradient(180deg,rgba(34,211,238,.34),rgba(34,211,238,.12));box-shadow:0 0 20px rgba(34,211,238,.35);transform:translateY(-1px)}
+.btn.ghost{border-color:var(--line);background:rgba(255,255,255,.03);color:var(--muted)}
+.btn.ghost:hover{color:#fff;border-color:rgba(34,211,238,.5)}
+.btn svg{width:13px;height:13px}
+
+.glass{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 18px 50px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+/* ============ 容器 ============ */
+.wrap{position:relative;z-index:10;max-width:1320px;margin:0 auto;padding:0 24px}
+
+/* ============ Hero ============ */
+.hero{padding:110px 0 46px;text-align:left}
+.hero-tag{
+  font-family:var(--mono);font-size:11.5px;color:var(--cyan);letter-spacing:.16em;
+  margin-bottom:16px;display:flex;align-items:center;gap:10px;
+}
+.hero-tag::before{content:"";width:26px;height:1px;background:linear-gradient(90deg,var(--cyan),transparent)}
+.hero h1{
+  font-size:clamp(32px,5.4vw,58px);font-weight:700;letter-spacing:.1em;
+  margin:0 0 16px;line-height:1.16;
+  background:linear-gradient(120deg,#f2f8ff 12%,#a9d9ff 46%,#b79cff 88%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero p{color:var(--muted);font-size:14.5px;max-width:66ch;margin:0 0 24px;line-height:1.8}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:#a8c6e6;
+  padding:5px 12px;border-radius:99px;border:1px solid rgba(120,180,255,.22);
+  background:rgba(120,180,255,.06);
+}
+
+/* ============ 板块外层 ============ */
+.sheet{display:flex;flex-direction:column;gap:20px;padding-bottom:34px}
+.sheet-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  padding:0 2px;letter-spacing:.12em;
+}
+.sheet-head b{color:#cfe4ff;font-weight:600;letter-spacing:.16em}
+.sheet-head .ln{flex:1;height:1px;background:linear-gradient(90deg,rgba(120,180,255,.3),transparent)}
+
+/* ============ 板块选择卡（入口） ============ */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;margin-bottom:12px}
+.cat{
+  position:relative;padding:26px 24px;cursor:pointer;text-decoration:none;display:block;
+  overflow:hidden;transition:.32s cubic-bezier(.4,0,.2,1);border-radius:16px;
+  background:var(--card);border:1px solid var(--line);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 18px 50px rgba(0,0,0,.36);
+}
+.cat::before{
+  content:"";position:absolute;left:0;top:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--violet),transparent);
+  opacity:.55;transition:.32s;
+}
+.cat::after{
+  content:"";position:absolute;inset:0;opacity:0;transition:.4s;pointer-events:none;
+  background:radial-gradient(420px 260px at var(--mx,50%) var(--my,0%),rgba(34,211,238,.14),transparent 70%);
+}
+.cat:hover{transform:translateY(-4px);border-color:rgba(34,211,238,.45);box-shadow:0 26px 66px rgba(0,0,0,.5),0 0 0 1px rgba(34,211,238,.2)}
+.cat:hover::before{opacity:1}
+.cat:hover::after{opacity:1}
+.cat-idx{
+  font-family:var(--mono);font-size:10.5px;color:var(--cyan);letter-spacing:.18em;margin-bottom:14px;
+}
+.cat-ico{
+  width:44px;height:44px;border-radius:12px;display:grid;place-items:center;margin-bottom:16px;
+  background:linear-gradient(145deg,rgba(34,211,238,.16),rgba(139,92,246,.16));
+  border:1px solid rgba(130,205,255,.28);
+}
+.cat-ico svg{width:21px;height:21px;color:var(--cyan)}
+.cat h3{margin:0 0 8px;font-size:19px;font-weight:600;color:#f2f8ff;letter-spacing:.04em}
+.cat p{margin:0 0 18px;font-size:13px;color:var(--muted);line-height:1.7}
+.cat-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  padding-top:14px;border-top:1px solid rgba(120,180,255,.12);
+}
+.cat-foot .go{color:var(--cyan);transition:transform .3s}
+.cat:hover .cat-foot .go{transform:translateX(5px)}
+
+/* ---- 入口卡封面预览 ---- */
+.cat-cover{
+  position:relative;margin:-26px -24px 18px;height:150px;overflow:hidden;
+  border-bottom:1px solid rgba(120,180,255,.14);
+}
+.cat-cover img{width:100%;height:150px;object-fit:cover;object-position:50% 30%;
+  filter:brightness(.72) saturate(.95);transition:transform .8s cubic-bezier(.16,1,.3,1),filter .5s}
+.cat:hover .cat-cover img{transform:scale(1.05);filter:brightness(.86) saturate(1.05)}
+.cat-cover::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(4,7,15,.15),rgba(4,7,15,.35) 55%,rgba(8,15,28,.92));
+}
+.cat-cover-tag{
+  position:absolute;left:14px;bottom:12px;right:14px;z-index:2;
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:rgba(233,242,255,.78);
+}
+.cat-cover-tag b{color:var(--cyan);font-weight:400}
+.cat-mini{display:flex;gap:6px;margin-left:auto}
+.cat-mini img{
+  width:34px;height:34px;border-radius:7px;object-fit:cover;
+  border:1px solid rgba(160,210,255,.28);box-shadow:0 4px 12px rgba(0,0,0,.5);
+  filter:none!important;transition:transform .35s;
+}
+.cat:hover .cat-mini img{transform:translateY(-2px)}
+.cat-cover--eng{display:grid;place-items:center;background:
+  radial-gradient(420px 200px at 50% 20%,rgba(34,211,238,.16),transparent 70%),
+  linear-gradient(160deg,rgba(11,21,40,.9),rgba(5,10,20,.98));}
+.cat-cover--eng svg{width:100%;height:100%;opacity:.85}
+
+/* ============ 板块内容（可折叠） ============ */
+.panel{
+  display:none;flex-direction:column;gap:18px;
+  animation:panelIn .42s cubic-bezier(.16,1,.3,1);
+}
+.panel.open{display:flex}
+@keyframes panelIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+.panel-head{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:18px 22px;
+}
+.panel-back{
+  cursor:pointer;font-family:var(--mono);font-size:11.5px;color:var(--muted);
+  background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:8px;
+  padding:6px 12px;transition:.24s;display:inline-flex;align-items:center;gap:6px;
+}
+.panel-back:hover{color:var(--cyan);border-color:rgba(34,211,238,.5);transform:translateX(-2px)}
+.panel-ttl{font-size:17px;font-weight:600;color:#f2f8ff;letter-spacing:.05em}
+.panel-cnt{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto}
+
+/* -------- 作品网格 -------- */
+.art-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.art{
+  position:relative;border-radius:14px;overflow:hidden;cursor:pointer;
+  border:1px solid rgba(120,180,255,.14);background:#080f1c;
+  aspect-ratio:1/1;transition:.4s cubic-bezier(.16,1,.3,1);
+}
+.art:hover{transform:translateY(-5px);border-color:rgba(34,211,238,.5);
+  box-shadow:0 24px 56px -16px rgba(0,0,0,.85),0 0 0 1px rgba(34,211,238,.18)}
+.art img{width:100%;height:100%;object-fit:cover;filter:brightness(.88) saturate(.98);
+  transition:transform .75s cubic-bezier(.16,1,.3,1),filter .5s}
+.art:hover img{transform:scale(1.06);filter:brightness(1.02) saturate(1.06)}
+.art-info{
+  position:absolute;left:0;right:0;bottom:0;padding:16px 16px 14px;
+  background:linear-gradient(0deg,rgba(3,7,14,.95),rgba(3,7,14,.6) 48%,transparent);
+}
+.art-cn{font-size:16px;font-weight:600;color:#fff;letter-spacing:.1em;display:flex;align-items:baseline;gap:8px}
+.art-en{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--cyan);margin-top:4px;text-transform:uppercase}
+.art-sub{font-size:11.5px;color:var(--muted);margin-top:6px}
+.art-no{
+  position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:9.5px;
+  color:rgba(255,255,255,.5);padding:3px 7px;border:1px solid rgba(255,255,255,.14);
+  border-radius:4px;background:rgba(3,7,14,.55);backdrop-filter:blur(6px);transition:.3s;
+}
+.art:hover .art-no{color:var(--cyan);border-color:rgba(34,211,238,.5)}
+
+/* -------- 文档列表 -------- */
+.doc-list{display:flex;flex-direction:column;gap:12px}
+.doc{
+  display:flex;align-items:center;gap:16px;padding:18px 20px;text-decoration:none;
+  transition:.3s cubic-bezier(.4,0,.2,1);
+}
+.doc:hover{transform:translateX(4px);border-color:rgba(34,211,238,.45);
+  box-shadow:0 14px 38px rgba(0,0,0,.4),0 0 0 1px rgba(34,211,238,.16)}
+.doc-ico{
+  width:40px;height:40px;border-radius:10px;display:grid;place-items:center;flex-shrink:0;
+  background:linear-gradient(145deg,rgba(34,211,238,.14),rgba(139,92,246,.14));
+  border:1px solid rgba(130,205,255,.24);
+}
+.doc-ico svg{width:18px;height:18px;color:var(--cyan)}
+.doc-body{flex:1;min-width:0}
+.doc-name{font-size:14px;color:#f0f6ff;font-weight:500;margin-bottom:4px}
+.doc-meta{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.08em}
+.doc-go{font-family:var(--mono);font-size:15px;color:var(--muted);transition:.3s}
+.doc:hover .doc-go{color:var(--cyan);transform:translateX(3px)}
+
+/* -------- 工程说明卡 -------- */
+.proj-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.pcard{padding:20px 22px;transition:.3s}
+.pcard:hover{border-color:rgba(34,211,238,.4);transform:translateY(-3px)}
+.pcard h4{margin:0 0 8px;font-size:14.5px;color:#f0f6ff;font-weight:600;display:flex;align-items:center;gap:8px}
+.pcard h4 .tag{font-family:var(--mono);font-size:9.5px;color:var(--cyan);
+  padding:2px 7px;border-radius:4px;border:1px solid rgba(34,211,238,.35);background:rgba(34,211,238,.08)}
+.pcard p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.7}
+.pcard .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.pcard .tags span{font-family:var(--mono);font-size:10px;color:#a8c6e6;
+  padding:3px 9px;border-radius:5px;background:rgba(120,180,255,.07);border:1px solid rgba(120,180,255,.16)}
+
+/* ============ 灯箱 ============ */
+.lb{position:fixed;inset:0;z-index:200;display:none;background:rgba(2,4,9,.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.lb.open{display:flex;align-items:center;justify-content:center;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.lb-stage{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 330px;
+  gap:clamp(20px,3vw,44px);align-items:center;width:100%;max-width:1340px;
+  padding:clamp(20px,3vw,40px);max-height:100vh}
+.lb-imgwrap{display:flex;align-items:center;justify-content:center;min-height:0}
+.lb-imgwrap img{max-height:min(84vh,880px);width:auto;max-width:100%;border-radius:12px;
+  box-shadow:0 40px 100px rgba(0,0,0,.9);animation:zoomIn .34s cubic-bezier(.16,1,.3,1)}
+@keyframes zoomIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.lb-no{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:.22em;margin-bottom:14px}
+.lb-title{font-size:clamp(26px,3.2vw,38px);font-weight:700;color:#fff;letter-spacing:.08em;line-height:1.16;margin-bottom:8px}
+.lb-en{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--muted);text-transform:uppercase;margin-bottom:22px}
+.lb-desc{color:var(--muted);font-size:13.5px;line-height:1.8;margin-bottom:24px}
+.lb-specs{border-top:1px solid var(--line);padding-top:18px;display:grid;gap:11px}
+.spec{display:grid;grid-template-columns:74px 1fr;gap:14px;font-size:12.5px}
+.spec dt{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--muted);padding-top:2px}
+.spec dd{color:#c4d6e6;margin:0}
+.lb-nav{display:flex;gap:10px;margin-top:26px}
+.lb-nav button{flex:1;cursor:pointer;font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  color:#dff3ff;padding:11px;border-radius:9px;border:1px solid rgba(120,180,255,.28);
+  background:rgba(255,255,255,.03);transition:.25s}
+.lb-nav button:hover{background:rgba(34,211,238,.16);border-color:var(--cyan)}
+.lb-close{position:absolute;top:clamp(14px,2vw,26px);right:clamp(14px,2vw,26px);
+  width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.05);
+  border:1px solid rgba(120,180,255,.3);color:#dff3ff;cursor:pointer;display:grid;place-items:center;
+  transition:.25s;z-index:10}
+.lb-close:hover{background:rgba(255,80,80,.18);border-color:rgba(255,80,80,.55);transform:rotate(90deg)}
+.lb-arrow{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;
+  background:rgba(4,7,15,.85);border:1px solid rgba(120,180,255,.3);color:#dff3ff;cursor:pointer;
+  display:grid;place-items:center;transition:.25s;z-index:10}
+.lb-arrow:hover{background:rgba(34,211,238,.16);border-color:var(--cyan)}
+.lb-arrow.prev{left:clamp(10px,2vw,26px)}
+.lb-arrow.next{right:clamp(10px,2vw,26px)}
+
+/* ============ 页脚 ============ */
+.site-footer{
+  position:relative;z-index:10;margin-top:40px;padding:26px 24px 40px;
+  text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted);
+  border-top:1px solid rgba(120,180,255,.1);letter-spacing:.08em;
+}
+.site-footer a{color:var(--cyan);text-decoration:none}
+
+/* ============ 响应式 ============ */
+@media(max-width:1024px){
+  .art-grid{grid-template-columns:repeat(2,1fr)}
+  .lb-stage{grid-template-columns:1fr;overflow-y:auto;gap:18px}
+  .lb-imgwrap img{max-height:58vh}
+}
+@media(max-width:720px){
+  .site-header{padding:0 14px;height:52px}
+  .brand small{display:none}
+  .btn{padding:7px 10px;font-size:11px}
+  .wrap{padding:0 14px}
+  .hero{padding:86px 0 30px}
+  .art-grid{grid-template-columns:1fr}
+  .cat-grid{grid-template-columns:1fr}
+  .panel-head{padding:14px 16px}
+  .panel-cnt{margin-left:0;width:100%}
+  .lb-arrow{width:38px;height:38px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="fx-layer aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+<div class="grid-floor" aria-hidden="true"></div>
+<div class="fx-layer scan" aria-hidden="true"></div>
+
+<header class="site-header header">
+  <div class="brand mono"><span class="dot"></span>TAN DIAN <small>// VISUAL PORTFOLIO</small></div>
+  <div class="hd-actions">
+    <a class="btn ghost" href="../index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      返回简历
+    </a>
+    <button class="btn" id="topBtn2">回到顶部</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="hero-tag mono">// PORTFOLIO · SELECTED WORKS</div>
+    <h1>作 品 集</h1>
+    <p>
+      这里收录两类作品：以中国古建屋脊神兽与传统神话为原型的<strong>潮玩 IP 角色设计</strong>，
+      以及从结构设计到 PLC 控制的<strong>机械与自动化工程项目</strong>。
+      内容按项目文件夹划分板块，点击板块卡片查看详情。
+    </p>
+    <div class="hero-chips">
+      <span class="chip">9 WORKS · ART</span>
+      <span class="chip">3 DOCS · ENGINEERING</span>
+      <span class="chip">COMFYUI PIPELINE</span>
+      <span class="chip">TIA PORTAL V21</span>
+    </div>
+  </section>
+
+  <!-- ============ 板块入口 ============ -->
+  <div class="sheet-head">
+    <span>PORTFOLIO / INDEX</span><span class="ln"></span><b>作品板块</b><span>共 2 类</span>
+  </div>
+
+  <div class="cat-grid" style="margin-bottom:34px">
+    <a class="cat" href="#panel-art" data-open="art">
+      <div class="cat-cover">
+        <picture><source media="(max-width:720px)" srcset="../assets/art/fenghuang-thumb.webp"><img src="../assets/art/fenghuang.webp" alt="美术项目封面" loading="lazy"></picture>
+        <div class="cat-cover-tag">
+          <b>◆</b> JIN · ROOF BEAST SERIES
+          <span class="cat-mini">
+            <img src="../assets/art/chiwen-thumb.webp" alt="" loading="lazy">
+            <img src="../assets/art/shishi-thumb.webp" alt="" loading="lazy">
+            <img src="../assets/art/suanni-thumb.webp" alt="" loading="lazy">
+          </span>
+        </div>
+      </div>
+      <div class="cat-idx mono">CATEGORY / 01</div>
+      <div class="cat-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l2.4 5.4 5.6.7-4.2 4 1.1 5.9L12 16.2 7.1 19l1.1-5.9-4.2-4 5.6-.7z"/>
+        </svg>
+      </div>
+      <h3>美术项目</h3>
+      <p>东方神兽潮玩 IP 系列角色设计，含凤凰、鸱吻、石狮、狻猊、海马、行什等 9 件作品。</p>
+      <div class="cat-foot"><span class="mono">9 WORKS</span><span class="go mono">展开 →</span></div>
+    </a>
+
+    <a class="cat" href="#panel-eng" data-open="eng">
+      <div class="cat-cover cat-cover--eng">
+        <svg viewBox="0 0 400 150" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="ln1" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#22d3ee" stop-opacity=".1"/>
+              <stop offset=".5" stop-color="#4b8cf7" stop-opacity=".85"/>
+              <stop offset="1" stop-color="#8b5cf6" stop-opacity=".1"/>
+            </linearGradient>
+          </defs>
+          <g opacity=".16" stroke="#7aacff" stroke-width=".6">
+            <path d="M0 30H400M0 60H400M0 90H400M0 120H400M60 0V150M130 0V150M200 0V150M270 0V150M340 0V150"/>
+          </g>
+          <path d="M40 108H120M120 108V46H215M215 46H300M300 46V96H362" stroke="url(#ln1)" stroke-width="1.6"/>
+          <circle cx="40" cy="108" r="3.5" fill="#22d3ee"/>
+          <rect x="116" y="104" width="8" height="8" fill="#0b1528" stroke="#4b8cf7" stroke-width="1.4"/>
+          <circle cx="215" cy="46" r="4" fill="#8b5cf6"/>
+          <rect x="296" y="92" width="8" height="8" fill="#0b1528" stroke="#22d3ee" stroke-width="1.4"/>
+          <circle cx="362" cy="96" r="3.5" fill="#22d3ee"/>
+          <g font-family="Consolas,monospace" font-size="7.5" fill="rgba(142,166,198,.9)" letter-spacing="1">
+            <text x="40" y="124">S7-1200</text>
+            <text x="196" y="34">HMI</text>
+            <text x="330" y="84">OUT</text>
+          </g>
+          <g stroke="rgba(34,211,238,.5)" stroke-width="1.2">
+            <circle cx="215" cy="46" r="10" stroke-dasharray="2 4"/>
+          </g>
+        </svg>
+        <div class="cat-cover-tag">
+          <b>▣</b> TIA PORTAL · PLC · CAD
+        </div>
+      </div>
+      <div class="cat-idx mono">CATEGORY / 02</div>
+      <div class="cat-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 9h4M7 13h8M9 21h6"/>
+        </svg>
+      </div>
+      <h3>工程项目</h3>
+      <p>PLC 自动化与机械结构实践，含西门子 TIA Portal V21 工程、交通灯控制系统的 BOM、I/O 分配与程序文档。</p>
+      <div class="cat-foot"><span class="mono">3 DOCS</span><span class="go mono">展开 →</span></div>
+    </a>
+  </div>
+
+  <!-- ============ 美术项目 ============ -->
+  <div class="panel" id="panel-art">
+    <div class="glass panel-head">
+      <button class="panel-back mono" data-close>← 返回板块</button>
+      <span class="panel-ttl">美术项目</span>
+      <span class="mono" style="font-size:10.5px;color:var(--muted);letter-spacing:.14em">ART PROJECTS</span>
+      <span class="panel-cnt">9 WORKS</span>
+    </div>
+
+    <div class="art-grid" id="artGrid"></div>
+  </div>
+
+  <!-- ============ 工程项目 ============ -->
+  <div class="panel" id="panel-eng">
+    <div class="glass panel-head">
+      <button class="panel-back mono" data-close>← 返回板块</button>
+      <span class="panel-ttl">工程项目</span>
+      <span class="mono" style="font-size:10.5px;color:var(--muted);letter-spacing:.14em">ENGINEERING</span>
+      <span class="panel-cnt">3 DOCS</span>
+    </div>
+
+    <div class="proj-cards">
+      <div class="glass pcard">
+        <h4>西门子 TIA Portal V21 <span class="tag">PROJECT</span></h4>
+        <p>HMI 与 PLC 联调的完整博途工程，含硬件组态、梯形图程序与仿真验证记录。</p>
+        <div class="tags"><span>TIA V21</span><span>S7-1200</span><span>HMI</span><span>LAD</span></div>
+      </div>
+      <div class="glass pcard">
+        <h4>交通灯控制系统 <span class="tag">DESIGN</span></h4>
+        <p>从器件选型到程序验证的闭环设计，含 BOM 清单、I/O 分配表与完整程序文档。</p>
+        <div class="tags"><span>BOM</span><span>I/O 分配</span><span>梯形图</span></div>
+      </div>
+      <div class="glass pcard">
+        <h4>温差发电电动车 <span class="tag">COMPETITION</span></h4>
+        <p>工创大赛参赛项目。冷热端温差发电替代电池供电，完成整车结构、驱动电路与控制系统的整体设计。</p>
+        <div class="tags"><span>SolidWorks</span><span>轻量化</span><span>稳压电路</span></div>
+      </div>
+    </div>
+
+    <div class="sheet-head" style="margin-top:10px">
+      <span>FILES</span><span class="ln"></span><b>项目文档</b>
+    </div>
+
+    <div class="doc-list">
+      <a class="glass doc" href="../assets/docs/traffic-light-program.pdf" target="_blank" rel="noopener">
+        <span class="doc-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>
+          </svg>
+        </span>
+        <span class="doc-body">
+          <span class="doc-name">交通灯 · 程序文档</span>
+          <span class="doc-meta mono">PDF · 浏览器内直接查看</span>
+        </span>
+        <span class="doc-go mono">↗</span>
+      </a>
+
+      <a class="glass doc" href="../assets/docs/traffic-light-bom.xlsx" download>
+        <span class="doc-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>
+          </svg>
+        </span>
+        <span class="doc-body">
+          <span class="doc-name">交通灯 · BOM 清单</span>
+          <span class="doc-meta mono">XLSX · 点击下载</span>
+        </span>
+        <span class="doc-go mono">↓</span>
+      </a>
+
+      <a class="glass doc" href="../assets/docs/traffic-light-io.xlsx" download>
+        <span class="doc-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>
+          </svg>
+        </span>
+        <span class="doc-body">
+          <span class="doc-name">交通灯 · I/O 分配表</span>
+          <span class="doc-meta mono">XLSX · 点击下载</span>
+        </span>
+        <span class="doc-go mono">↓</span>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer mono">
+  谈典 · 作品集 | <a href="../index.html">返回简历</a> | a965942058@126.com
+</footer>
+
+<!-- ============ 灯箱 ============ -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="作品预览">
+  <button class="lb-close" id="lbClose" aria-label="关闭">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <button class="lb-arrow prev" id="lbPrev" aria-label="上一件">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="lb-arrow next" id="lbNext" aria-label="下一件">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+
+  <div class="lb-stage">
+    <div class="lb-imgwrap"><img id="lbImg" alt=""></div>
+    <div class="lb-side">
+      <div class="lb-no" id="lbNo">01 / 09</div>
+      <div class="lb-title" id="lbTitle"></div>
+      <div class="lb-en" id="lbEn"></div>
+      <div class="lb-desc" id="lbDesc"></div>
+      <dl class="lb-specs">
+        <div class="spec"><dt>形制</dt><dd id="lbForm"></dd></div>
+        <div class="spec"><dt>材质</dt><dd id="lbMat"></dd></div>
+        <div class="spec"><dt>尺寸</dt><dd id="lbSize"></dd></div>
+      </dl>
+      <div class="lb-nav">
+        <button id="lbPrev2">← 上一件</button>
+        <button id="lbNext2">下一件 →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var WORKS = [
+    {cn:'凤凰', en:'Fenghuang', file:'fenghuang', sub:'栖梧而生 · 浴火而歌',
+     desc:'取自《山海经》五凤之一。取凤羽的赤、青、金三色分层塑造，尾羽以半透明树脂薄膜延展成流动的风纹，配以仿古建筑斗拱底座，凝住"浴火"前的一刻。',
+     form:'五凤之一 · 神鸟', mat:'青铜质感 + 透明树脂 + 掐丝金', size:'8 cm / 盲盒款'},
+    {cn:'鸱吻', en:'Chi Wen', file:'chiwen', sub:'吞火镇厄 · 守护一方',
+     desc:'古建正脊两端的吞脊兽，传说能吞火避灾。以青绿铜锈为主调，口衔金珠、背负剑柄，鳞片逐层压铸出厚度感，底座参照山西古建屋脊构件还原。',
+     form:'龙生九子 · 屋脊正脊', mat:'青铜锈 + 哑光金', size:'8 cm / 盲盒款'},
+    {cn:'石狮', en:'Stone Lion', file:'shishi', sub:'衔铃守户 · 踏球镇宅',
+     desc:'中式门狮的幼态化演绎。卷云状鬃毛保留"螺髻"的传统符号，颈间金铃与绣球纹样取自传统石雕细节，整体压低重心以强化"镇宅"的稳重感。',
+     form:'门狮 · 镇宅兽', mat:'青石质感 + 鎏金', size:'8 cm / 盲盒款'},
+    {cn:'狻猊', en:'Suanni', file:'suanni', sub:'吞烟吐雾 · 静坐观心',
+     desc:'龙生九子之一，喜烟好坐。这一件刻意做成慵懒体态——半眯眼、圆腹、口衔烟卷，把"神兽"的威严转化为可亲近的性格，是全系列里最具反差感的设计。',
+     form:'龙生九子 · 香炉守护', mat:'青铜锈 + 鎏金', size:'8 cm / 盲盒款'},
+    {cn:'海马', en:'Hai Ma', file:'haima', sub:'踏浪而行 · 云生足下',
+     desc:'古建屋脊上的海马，象征"海晏河清"。以透明云纹托起腾跃姿态，鬃毛向后飘散成流动的浪，背部鳞甲与卷云纹交织，形成轻盈与厚重的对比。',
+     form:'屋脊瑞兽 · 海马', mat:'半透明树脂 + 哑光金', size:'8 cm / 盲盒款'},
+    {cn:'行什', en:'Xing Chi', file:'xingchi', sub:'生翼持杵 · 雷火辟邪',
+     desc:'屋脊走兽行列中的最后一位，唯一带双翼、猴面持金刚杵。以深墨底色压住金色羽翼，面部保留猴的机敏感，是全系列中气势最强的一件。',
+     form:'屋脊走兽 · 雷神', mat:'墨色金属 + 鎏金羽', size:'8 cm / 盲盒款'},
+    {cn:'晋商票号', en:'Jin Merchant', file:'jinshang', sub:'执算盘 · 汇通天下',
+     desc:'把晋商文化具象成角色：手执算盘、身着票号纹章长袍，胸前"晋"字徽记与腰间的银票钱袋构成叙事线索。兽角与算盘的组合，是"精算"与"祥瑞"的双重隐喻。',
+     form:'地域文化 IP · 晋商', mat:'青铜 + 鎏金织物纹', size:'8 cm / 盲盒款'},
+    {cn:'天马', en:'Tian Ma', file:'tianma', sub:'凌云而行 · 心有山海',
+     desc:'取"天马行空"之意。白色瓷质躯体配青绿云纹鬃尾，四蹄踏云、侧身回望的动势强化腾跃感，整体留白较多，气质清透。',
+     form:'神驹 · 天马', mat:'白瓷质感 + 青绿釉', size:'8 cm / 盲盒款'},
+    {cn:'龙', en:'Long', file:'long', sub:'角如珊瑚 · 鳞耀赤金',
+     desc:'系列收尾之作，取标准五爪金龙形制。金色角枝向上生长如珊瑚，鳞片逐片独立建模，深褐与赤金的高对比让整条龙在小尺寸下依然轮廓鲜明。',
+     form:'四灵之首 · 龙', mat:'深褐肌理 + 赤金', size:'8 cm / 盲盒款'}
+  ];
+
+  /* ---- 生成作品网格 ---- */
+  var grid = document.getElementById('artGrid');
+  WORKS.forEach(function(w, i){
+    var el = document.createElement('div');
+    el.className = 'art';
+    el.setAttribute('data-i', i);
+    el.innerHTML =
+      '<span class="art-no mono">' + String(i+1).padStart(2,'0') + '</span>' +
+      '<img src="../assets/art/' + w.file + '-thumb.webp" alt="' + w.cn + '" loading="lazy" width="420" height="420">' +
+      '<div class="art-info">' +
+        '<div class="art-cn">' + w.cn + '</div>' +
+        '<div class="art-en">' + w.en + '</div>' +
+        '<div class="art-sub">' + w.sub + '</div>' +
+      '</div>';
+    el.addEventListener('click', function(){ openLb(i); });
+    grid.appendChild(el);
+  });
+
+  /* ---- 灯箱 ---- */
+  var lb = document.getElementById('lb');
+  var lbImg = document.getElementById('lbImg');
+  var lbNo = document.getElementById('lbNo');
+  var lbTitle = document.getElementById('lbTitle');
+  var lbEn = document.getElementById('lbEn');
+  var lbDesc = document.getElementById('lbDesc');
+  var lbForm = document.getElementById('lbForm');
+  var lbMat = document.getElementById('lbMat');
+  var lbSize = document.getElementById('lbSize');
+  var cur = 0;
+
+  function renderLb(i){
+    cur = (i + WORKS.length) % WORKS.length;
+    var w = WORKS[cur];
+    lbImg.src = '../assets/art/' + w.file + '.webp';
+    lbImg.alt = w.cn;
+    lbNo.textContent = String(cur+1).padStart(2,'0') + ' / ' + String(WORKS.length).padStart(2,'0');
+    lbTitle.textContent = w.cn;
+    lbEn.textContent = w.en;
+    lbDesc.textContent = w.desc;
+    lbForm.textContent = w.form;
+    lbMat.textContent = w.mat;
+    lbSize.textContent = w.size;
+  }
+  function openLb(i){
+    renderLb(i);
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLb(){
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('lbClose').addEventListener('click', closeLb);
+  document.getElementById('lbPrev').addEventListener('click', function(){ renderLb(cur-1); });
+  document.getElementById('lbNext').addEventListener('click', function(){ renderLb(cur+1); });
+  document.getElementById('lbPrev2').addEventListener('click', function(e){ e.stopPropagation(); renderLb(cur-1); });
+  document.getElementById('lbNext2').addEventListener('click', function(e){ e.stopPropagation(); renderLb(cur+1); });
+  lb.addEventListener('click', function(e){ if (e.target === lb) closeLb(); });
+  document.addEventListener('keydown', function(e){
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLb();
+    if (e.key === 'ArrowLeft') renderLb(cur-1);
+    if (e.key === 'ArrowRight') renderLb(cur+1);
+  });
+  var tx = 0;
+  lb.addEventListener('touchstart', function(e){ tx = e.changedTouches[0].clientX; }, {passive:true});
+  lb.addEventListener('touchend', function(e){
+    var dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 55) renderLb(cur + (dx < 0 ? 1 : -1));
+  }, {passive:true});
+
+  /* ---- 板块展开 / 收起 ---- */
+  var panels = { art: document.getElementById('panel-art'), eng: document.getElementById('panel-eng') };
+
+  function openPanel(key){
+    Object.keys(panels).forEach(function(k){
+      panels[k].classList.toggle('open', k === key);
+    });
+    var el = panels[key];
+    if (!el) return;
+    // 等 display 生效后再滚动
+    setTimeout(function(){
+      var y = el.getBoundingClientRect().top + window.scrollY - 74;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }, 40);
+  }
+  function closeAll(){
+    Object.keys(panels).forEach(function(k){ panels[k].classList.remove('open'); });
+    var y = document.querySelector('.cat-grid').getBoundingClientRect().top + window.scrollY - 90;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('[data-open]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      openPanel(a.dataset.open);
+    });
+  });
+  document.querySelectorAll('[data-close]').forEach(function(b){
+    b.addEventListener('click', closeAll);
+  });
+
+  /* ---- 卡片光晕跟随 ---- */
+  document.querySelectorAll('.cat').forEach(function(c){
+    c.addEventListener('mousemove', function(e){
+      var r = c.getBoundingClientRect();
+      c.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+      c.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+    });
+  });
+
+  /* ---- 滚动进度 ---- */
+  var prog = document.getElementById('progress');
+  window.addEventListener('scroll', function(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    prog.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  }, {passive:true});
+
+  /* ---- 回到顶部 ---- */
+  document.getElementById('topBtn2').addEventListener('click', function(){
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ---- 支持从 hash 直接打开板块 ---- */
+  if (location.hash === '#panel-art') openPanel('art');
+  if (location.hash === '#panel-eng') openPanel('eng');
+
+  /* ---- 进场动画 ---- */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (e.isIntersecting){
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'none';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.cat, .art, .pcard, .doc').forEach(function(el, i){
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(18px)';
+    el.style.transition = 'opacity .6s cubic-bezier(.16,1,.3,1) ' + ((i % 3) * .05) + 's, transform .6s cubic-bezier(.16,1,.3,1) ' + ((i % 3) * .05) + 's, border-color .3s, box-shadow .3s';
+    io.observe(el);
+  });
+
+})();
+</script>
+</body>
+</html>
