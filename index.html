@@ -327,6 +327,20 @@ table.info-table a:hover{color:#fff;border-bottom-style:solid}
 .tl-list li{position:relative;padding-left:16px;font-size:14px;line-height:1.85;color:#cfdcf0}
 .tl-list li::before{content:"▹";position:absolute;left:0;color:var(--cyan);font-size:12px}
 
+/* 新增经历：轻微强调 */
+.tl-item.tl-hl{
+  padding:14px 16px;border-radius:12px;
+  background:linear-gradient(120deg,rgba(34,211,238,.05),rgba(139,92,246,.05));
+  border:1px solid rgba(34,211,238,.18);
+}
+.tl-item.tl-hl::before{left:-24px}
+.tl-hl .tl-head .nm{color:#eaf6ff}
+.new-tag{
+  font-size:9px;letter-spacing:.16em;padding:2px 6px;border-radius:4px;
+  color:#04070f;background:linear-gradient(90deg,var(--cyan),var(--violet));
+  font-weight:700;line-height:1.5;
+}
+
 .bars{display:grid;gap:15px}
 .bar-row .top{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:7px}
 .bar-row .top em{font-style:normal;color:var(--muted);font-size:12px;font-family:var(--mono)}
@@ -475,7 +489,7 @@ table.info-table a:hover{color:#fff;border-bottom-style:solid}
         <div class="hero-stats">
           <div><b>2023.09</b><span>入学 · 本科在读至今</span></div>
           <div><b>1 项</b><span>工创大赛项目</span></div>
-          <div><b>2 段</b><span>实习经历</span></div>
+          <div><b>3 段</b><span>实习经历</span></div>
           <div><b>4 年</b><span>班级班长任职</span></div>
         </div>
       </div>
@@ -545,6 +559,13 @@ table.info-table a:hover{color:#fff;border-bottom-style:solid}
               <li>实地走访冲压、焊接、装配等核心生产车间，熟悉数控机床、自动化流水线设备运行逻辑。</li>
             </ul>
           </div>
+          <div class="tl-item tl-hl">
+            <div class="tl-head"><span class="nm">PLC 编程实习</span><span class="badge">2026.10</span><span class="new-tag mono">NEW</span></div>
+            <ul class="tl-list">
+              <li>使用西门子博途 V21 进行 PLC 编程，借助 AI 辅助编写程序逻辑，完成仿真验证后将程序烧录进实物设备；</li>
+              <li>搭建 AI 辅助编程工作流（DeepSeek-V4.1-Flash 模型），把需求描述转化为可运行的梯形图程序，显著缩短调试周期。</li>
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -553,32 +574,39 @@ table.info-table a:hover{color:#fff;border-bottom-style:solid}
         <div class="sub-label">专业领域</div>
         <div class="bars">
           <div class="bar-row">
-            <div class="top"><span>绘图建模</span><em>AutoCAD / SolidWorks</em></div>
+            <div class="top"><span>绘图建模</span><em>AutoCAD / SolidWorks / UG</em></div>
             <div class="track"><div class="fill" data-v="92"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="top"><span>PLC 编程</span><em>TIA Portal V21 / PLC Advanced V8.0</em></div>
+            <div class="track"><div class="fill" data-v="88"></div></div>
           </div>
           <div class="bar-row">
             <div class="top"><span>办公能力</span><em>Office / Excel</em></div>
             <div class="track"><div class="fill" data-v="85"></div></div>
           </div>
           <div class="bar-row">
-            <div class="top"><span>工艺认知</span><em>金工 / 冲压 / 焊接 / 装配</em></div>
+            <div class="top"><span>工艺认知</span><em>金工 / 冲压 / 焊接 / 装配 / 自动化产线</em></div>
             <div class="track"><div class="fill" data-v="80"></div></div>
           </div>
         </div>
         <ul class="tags" style="margin-top:12px">
-          <li>熟练使用 AutoCAD、SolidWorks 进行机械建模与工程图绘制</li>
+          <li>熟练使用 AutoCAD、SolidWorks、UG 进行机械建模与工程图绘制</li>
+          <li>熟练运用西门子博途 V21 编程，并通过 PLC Advanced V8.0 仿真，独立完成工业洗衣机、交通红绿灯等程序</li>
           <li>熟练运用 Office、Excel 办公软件，具备较好文档处理、沟通协调能力</li>
           <li>掌握金工基础加工工艺，了解冲压、焊接、装配、自动化产线相关知识</li>
         </ul>
 
-        <div class="sub-label">非专业领域技能</div>
+        <div class="sub-label">非机械专业领域技能</div>
         <ul class="tl-list">
           <li>熟悉并且熟练使用 ComfyUI、Stable Diffusion、Flux、Qwen-Image、Wan、Stable Video Diffusion 等模型或生态，能部署本地 ComfyUI 工作流并且搭配模型；</li>
           <li>有开源模型复现、Lora 训练等经验；</li>
           <li>理解图像生成、图像编辑、视频生成；</li>
           <li>有问题拆解能力和沟通能力，能和产品、运营、创意、设计、开发等角色协作推进落地；</li>
           <li>懂计算机，会基本计算机网络以及硬件问题排查以及维修；</li>
-          <li>有 AIGC 设计作品集。</li>
+          <li>会 Python 与 Web 渗透（学习中，操作目前仅在靶场环境尝试）；</li>
+          <li>用 AI 处理数据表格，把原本接近 2 小时的数据处理缩短到 10 分钟，大幅节省工作时间；</li>
+          <li>独立使用 AI 完成个人作品集网站从设计、开发到部署的全流程。</li>
         </ul>
       </section>
     </section>
